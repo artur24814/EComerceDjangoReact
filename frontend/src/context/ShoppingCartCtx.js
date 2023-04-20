@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
-import { ShoppingCart } from "../components/ShoppingCart"
+import { ShoppingCart } from "../components/ShoppingCart";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 
 const ShopingCartCtx = createContext({})
 
@@ -8,7 +9,7 @@ export function useShoppingCart () {
 }
 
 export function ShoppingCartProvider( {children} ){
-    const [cartItems, setCartItems] = useState([])
+    const [cartItems, setCartItems] = useLocalStorage('shopping-cart', [])
     const [isOpen, setIsOpen] = useState(false) 
 
     const openCart = () => setIsOpen(true)
@@ -17,14 +18,20 @@ export function ShoppingCartProvider( {children} ){
     const cartQuantity = cartItems.reduce(
         (quantity, item) => item.quantity + quantity, 0
     )
+
+    const totalPrice = cartItems.reduce(
+        // (parseFloat(sumaryTotal.innerHTML) + parseFloat(price)).toFixed(2)
+        (total, item) => parseFloat(item.quantity * item.price) + total, 0
+    )
+
     function getItemQuantity(id) {
         return cartItems.find(item => item.id === id)?.quantity || 0
     }
 
-    function increaseCartQuantity(id){
+    function increaseCartQuantity(id, price, image, title){
         setCartItems(currItems => {
             if (currItems.find(item => item.id ===id) == null) {
-                return [...currItems, {id, quantity: 1}]
+                return [...currItems, {id, quantity: 1, image: image, price: price, title: title}]
             } else {
                 return currItems.map(item => {
                     if (item.id === id) {
@@ -69,7 +76,9 @@ export function ShoppingCartProvider( {children} ){
                 openCart,
                 closeCart, 
                 cartItems, 
-                cartQuantity}}>
+                cartQuantity,
+                totalPrice,
+                }}>
                 {children}
                 <ShoppingCart isOpen={isOpen} />
         </ShopingCartCtx.Provider>

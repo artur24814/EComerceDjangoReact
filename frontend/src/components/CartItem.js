@@ -1,31 +1,16 @@
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import { Button, Stack } from "react-bootstrap"
 import { useShoppingCart } from "../context/ShoppingCartCtx"
 
-const CartItem = ({itemId, quantity}) => {
+const CartItem = ({itemId, image, price, quantity, title}) => {
     const { removeFromCart } = useShoppingCart()
 
-    const [products, setProducts] = useState([])
-
-    useEffect(() => {
-        getProducts()
-    }, [])
-
-    let getProducts = async() => {
-        let responce = await fetch('/api/products')
-        let data = await responce.json()
-        console.log('DATA:', data)
-        setProducts(data)
-    }
-
-    const item = products.find(i => i.id === itemId)
-    if (item == null) return null
     return (
         <Stack direction="horizontal" gap={2} className="d-flex align-items-center">
-            <img src={item.image} style={{ width: "125px", height: "75px", objectFit: "cover" }} alt={item.id}/>
+            <img src={image} style={{ width: "125px", height: "75px", objectFit: "cover" }} alt={itemId}/>
             <div className="me-auto">
                 <div>
-                    {item.name}{" "}
+                    {title}{" "}
                     {quantity > 1 && (
                         <span className="text-muted" style={{ fontSize: ".65rem" }}>
                         x{quantity}
@@ -33,11 +18,11 @@ const CartItem = ({itemId, quantity}) => {
                     )}
                 </div>
                 <div className="text-muted" style={{ fontSize: ".75rem" }}>
-                {item.price}
+                {price}
                 </div>
             </div>
-            <div> { item.price * quantity}</div>
-            <Button variant="outline-danger" size="sm" onClick={() => removeFromCart(item.id)} >
+            <div> { parseFloat(price * quantity).toFixed(2)}</div>
+            <Button variant="outline-danger" size="sm" onClick={() => removeFromCart(itemId)} >
                 &times;
             </Button>
         </Stack>
