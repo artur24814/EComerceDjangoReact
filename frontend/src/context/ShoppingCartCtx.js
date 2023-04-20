@@ -44,7 +44,7 @@ export function ShoppingCartProvider( {children} ){
             } else {
                 return currItems.map(item => {
                     if (item.id === id) {
-                        return {...item, quantity: item.quantity +1 }
+                        return {...item, quantity: item.quantity - 1 }
                     } else {
                         return item
                     }
