@@ -24,8 +24,14 @@ const Checkout = () => {
     }, [])
 
     useEffect(() => {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({totalPrice})
+        };
+
         let paymentKey = async () => {
-            let response = await fetch('/api/payment/');
+            let response = await fetch('/api/payment/', requestOptions);
             let data = await response.json();
             setClientSecret(data)
            }

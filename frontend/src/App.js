@@ -7,6 +7,7 @@ import Store from './pages/Store';
 import About from './pages/About';
 import Checkout from './pages/Checkout';
 import Completion from './pages/Competion';
+import ShippingInfo from './pages/ShippingInfo';
 import Navbar from './components/Navbar';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path='/checkout' element={<Checkout />} />
           <Route path="/completion" element={<Completion />} />
+          <Route path="/shipping" element={<ShippingInfo />} />
         </Routes>
       </Container>
     </ShoppingCartProvider>

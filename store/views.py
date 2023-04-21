@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework import viewsets
 from rest_framework import generics
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.decorators import action
 
@@ -27,6 +28,13 @@ class ProductViewSet(viewsets.ModelViewSet):
         instance =  get_object_or_404(Product, id=pk)
         serializer = ProductSerializer(instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def get_queryset(self):
+        qs = Product.objects.all()
+        title = self.request.query_params.get('title')
+        if title is not None:
+            qs =  qs.filter(title__icontains = title)
+        return qs
 
 class SizeList(generics.ListCreateAPIView):
     """
@@ -46,21 +54,25 @@ class CategoryList(generics.ListCreateAPIView):
 def user_order(request):
     cookie = json.loads(request.body)
     orders = getOrder(cookie)
-    print(orders)
-    # for elements in cookie:
-    #     print(elements)
     return JsonResponse(orders, safe=False)
 
+@api_view(['GET'])
 def config_view(request):
     publick_key = os.environ.get('SRTIPE_PUBLICK_KEY')
-    return JsonResponse(publick_key, safe=False)
+    return Response(publick_key, status=status.HTTP_200_OK)
 
+@api_view(['POST'])
 def payment_create(request):
     import stripe
     stripe.api_key = str(os.environ.get('STRIPE_SECRET_KEY'))
-    payment_id = stripe.PaymentIntent.create(
-        amount=2000,
-        currency="pln",
-        automatic_payment_methods={"enabled": True},
-        )
-    return JsonResponse(payment_id.client_secret, safe=False)
+    total_amount = request.data['totalPrice']
+    try:
+        payment_id = stripe.PaymentIntent.create(
+            amount=int(total_amount) * 100,
+            currency="pln",
+            automatic_payment_methods={"enabled": True},
+            )
+        return Response(payment_id.client_secret, status=status.HTTP_200_OK)
+    except Exception as e:
+        print(e)
+        return HttpResponseBadRequest()

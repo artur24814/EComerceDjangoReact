@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Button } from "react-bootstrap"
+import { Card, Button, Badge } from "react-bootstrap"
 import { useShoppingCart } from "../context/ShoppingCartCtx"
 
 const StoreItem = ({item}) => {
@@ -7,12 +7,21 @@ const StoreItem = ({item}) => {
     const quantity = getItemQuantity(item.id)
     return (
         <Card>
-            <Card.Img variant='top' src={item.image} height='200px' style={{ objectFit: "cover" }} />
+            <Card.Img variant='top' src={item.image} height='400px' style={{ objectFit: "cover" }} />
             <Card.Body className='d-flex flex-column'>
                 <Card.Title className="d-flex justify-content-between align-items-baseline mb-4">
                     <span className="fs-2">{item.title}</span>
                     <span className="ms-2 text-muted">{item.price}</span>
                 </Card.Title>
+                <div className="d-flex justify-content-center align-items-baseline mb-4">
+                    {item.sizes.map(item => (
+                        <h4>
+                            <Badge key={item} bg="light" text="dark" className='ms-1'>
+                                {item}
+                            </Badge>
+                        </h4>
+                    ))}
+                </div>
                 <div className='mt-auto'>
                     {quantity === 0 ? (<Button className='w-100' onClick={() => increaseCartQuantity(item.id, item.price, item.image, item.title) }>+ Add To Cart</Button>) 
                     :(

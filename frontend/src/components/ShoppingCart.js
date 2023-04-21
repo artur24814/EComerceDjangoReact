@@ -22,7 +22,7 @@ export function ShoppingCart({ isOpen }){
                         Total{" "} 
                         {totalPrice.toFixed(2)} $
                     </div>
-                    <Link to='/checkout'>
+                    <Link to='/shipping'>
                         <Button>Checkout</Button>
                     </Link>
                 </Stack>
