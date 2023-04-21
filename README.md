@@ -55,7 +55,7 @@ and django use static files from path 'frontend/build/static'.
 
 To avoid the 404 error problem in the django app, I chose instead of duplicate urls (create the same urls in React and Django) I used HashRouter instead of BrowserRouter in React index.js.
 
-*This project is online, you can check how it works
+*This project is online, you can check how it works in <a href='https://web-production-6394.up.railway.app/#/store'>Here</a>.
 
 <center><h2 id="clone_project">Clone and Run a Django Project</h2></center>
 
