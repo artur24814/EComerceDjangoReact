@@ -19,12 +19,8 @@ const ShippingForm = () => {
         }
 
     setValidated(true);
-    
-    if(validated === true ) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
-
+    event.preventDefault();
+    navigate("/checkout/");
   };
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
@@ -34,7 +30,6 @@ const ShippingForm = () => {
           <Form.Control
             required
             type="text"
-            name='firstname'
             placeholder="First name"
             defaultValue=""
           />
